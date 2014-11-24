@@ -1,0 +1,132 @@
+package test;
+
+import java.io.IOException;
+
+public class GameOfLife2 {
+	public void play(char[][] grid, int generations) {
+
+		if (grid == null || grid.length == 0 || grid[0].length == 0 || generations <= 0) {
+			return;
+		}
+
+		print(grid);
+
+		for (int i = 0; i < generations; i++) {
+			transform(grid);
+			print(grid);
+		}
+
+	}
+
+	private void transform(char[][] grid) {
+
+		int leni = grid.length;
+		int lenj = grid[0].length;
+		char[] temp = null;
+		char[] pre = new char[lenj];
+		char[] cur = new char[lenj];
+
+		for (int i = 0; i < leni; i++) {
+			temp = pre;
+			pre = cur;
+			cur = temp;
+
+			for (int j = 0; j < lenj; j++) {
+				cur[j] = grid[i][j];
+				calculateValue(i, j, pre, cur, grid);
+			}
+		}
+
+		return;
+	}
+
+	private void calculateValue(int i, int j, char[] pre, char[] cur,
+	char[][] grid) {
+
+		int leni = grid.length;
+		int lenj = grid.length;
+		int sum = 0;
+
+		// top and left use buf
+		// down and right use grid
+		// top
+		if (i - 1 >= 0 && j - 1 >= 0) {
+			sum = pre[j - 1] == 'O' ? sum + 1 : sum + 0;
+		}
+		if (i - 1 >= 0) {
+			sum = pre[j] == 'O' ? sum + 1 : sum + 0;
+		}
+		if (i - 1 >= 0 && j + 1 < lenj) {
+			sum = pre[j + 1] == 'O' ? sum + 1 : sum + 0;
+		}
+
+		// mid
+		if (j - 1 >= 0) {
+			sum = cur[j - 1] == 'O' ? sum + 1 : sum + 0;
+		}
+		if (j + 1 < lenj) {
+			sum = grid[i][j + 1] == 'O' ? sum + 1 : sum + 0;
+		}
+
+		// bottom
+		if (i + 1 < leni && j - 1 >= 0) {
+			sum = grid[i + 1][j - 1] == 'O' ? sum + 1 : sum + 0;
+		}
+		if (i + 1 < leni) {
+			sum = grid[i + 1][j] == 'O' ? sum + 1 : sum + 0;
+		}
+		if (i + 1 < leni && j + 1 < lenj) {
+			sum = grid[i + 1][j + 1] == 'O' ? sum + 1 : sum + 0;
+		}
+
+		if (sum < 2 || sum > 3) {
+			grid[i][j] = '#';
+		} else if (sum == 3) {
+			grid[i][j] = 'O';
+		} else {
+
+		}
+
+		return;
+	}
+
+	private void print(char[][] grid) {
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				sb.append(grid[i][j]);
+			}
+
+			System.out.println(sb.toString());
+			sb.setLength(0);
+		}
+
+		System.out.println();
+		try {
+			Runtime.getRuntime().exec("clear");
+			Thread.sleep(300);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return;
+	}
+
+	public static void main(String[] args) {
+		GameOfLife2 gol = new GameOfLife2();
+
+		char[][] grid = {
+			"######".toCharArray(),
+				"##OO##".toCharArray(),
+				"#O##O#".toCharArray(),
+				"##OO##".toCharArray(),
+				"######".toCharArray(),
+				"######".toCharArray()
+		};
+
+		gol.play(grid, 1000);
+
+	}
+}
