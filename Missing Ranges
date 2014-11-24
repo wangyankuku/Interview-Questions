@@ -1,0 +1,54 @@
+public class Solution {
+	public List < String > findMissingRanges(int[] numbers, int min, int max)
+	throws Exception {
+		if (numbers == null) {
+			throw new Exception();
+		}
+
+		int len = numbers.length;
+
+		List < String > list = new ArrayList < String > ();
+
+		int pre = min - 1;
+
+		// this will be from 1 to 99
+		for (int i = 0; i < len; i++) {
+			if (pre != numbers[i] - 1) {
+				if (numbers[i] - pre == 2) {
+					list.add(String.valueOf(pre + 1));
+				} else {
+					list.add((pre + 1) + "->" + (numbers[i] - 1));
+				}
+			}
+			pre = numbers[i];
+		}
+
+		if (pre < max) {
+			if (pre == max - 1) {
+				list.add(String.valueOf(max));
+			} else {
+				list.add((pre + 1) + "->" + max);
+			}
+		}
+
+		return list;
+	}
+
+	public static void main(String[] args) {
+		Solution solution = new Solution();
+
+		int[] numbers = {
+			10, 11, 12, 20, 97, 102, 103, 299
+		};
+
+		try {
+			List < String > res = solution.findMissingRanges(numbers, 1, 500);
+
+			System.out.println(res);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+}
