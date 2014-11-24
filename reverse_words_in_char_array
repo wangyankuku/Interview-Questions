@@ -1,0 +1,37 @@
+// if the char[] contains a sentence that has several words seperated with just single space, all the word will be reversed.
+// eg: input: "I love this world". output: "world this love I"
+
+public class Solution {
+	public void reverstStr(char[] str) {
+		reverse(0, str.length - 1, str);
+
+		int start = 0;
+		int i;
+
+		for (i = 0; i < str.length; i++) {
+			if (str[i] == ' ') {
+				reverse(start, i - 1, str);
+				start = i + 1;
+			}
+		}
+
+		reverse(start, i - 1, str);
+
+		return;
+	}
+
+	private void reverse(int start, int end, char[] str) {
+		int i = start;
+		int j = end;
+
+		while (i < j) {
+			char temp = str[i];
+			str[i] = str[j];
+			str[j] = temp;
+			i++;
+			j--;
+		}
+
+		return;
+	}
+}
