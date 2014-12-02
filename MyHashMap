@@ -1,0 +1,132 @@
+package my_map;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class HashMap < K, V > {
+
+	private final int CAPACITY;
+	private Entry < K, V > [] entries;
+
+	public HashMap() {
+		this(1024);
+	}
+
+	@SuppressWarnings("unchecked")
+	public HashMap(int capacity) {
+		this.CAPACITY = capacity;
+		entries = (Entry < K, V > []) new Entry[CAPACITY];
+	}
+
+	public V get(K key) {
+		int hash = key.hashCode() % CAPACITY;
+		Entry < K, V > curEntry = entries[hash];
+
+		while (curEntry != null) {
+			if (curEntry.getKey().equals(key)) {
+				return curEntry.getValue();
+			}
+
+			curEntry = curEntry.next;
+		}
+
+		return null;
+
+	}
+
+	public void put(K key, V value) {
+		int hash = key.hashCode() % CAPACITY;
+		Entry < K, V > cur = entries[hash];
+		Entry < K, V > pre = null;
+
+		while (cur != null) {
+			if (cur.getKey().equals(key)) {
+				cur.setValue(value);
+				return;
+			}
+
+			pre = cur;
+			cur = cur.next;
+		}
+
+		if (pre == null) {
+			entries[hash] = new Entry < K, V > (key, value);
+		} else {
+			pre.next = new Entry < K, V > (key, value);
+		}
+
+		return;
+
+	}
+
+	public boolean remove(K key) {
+		int hash = key.hashCode() % CAPACITY;
+		Entry < K, V > cur = entries[hash];
+		Entry < K, V > pre = null;
+
+		while (cur != null) {
+			if (cur.getKey().equals(key)) {
+				if (pre == null) {
+					entries[hash] = cur.next;
+				} else {
+					pre.next = cur.next;
+				}
+
+				return true;
+			}
+
+			pre = cur;
+			cur = cur.next;
+		}
+
+		return false;
+	}
+
+	public List < Entry < K, V >> entrySet() {
+		List < Entry < K, V >> list = new ArrayList < Entry < K, V >> ();
+
+		for (Entry < K, V > entry: entries) {
+			if (entry != null) {
+				list.add(entry);
+			}
+		}
+
+		return list;
+	}
+
+}
+
+class Entry < K, V > {
+	private final K key;
+	private V value;
+	Entry < K, V > next;
+
+	public Entry(K key, V value) {
+		this.key = key;
+		this.value = value;
+	}
+
+	public K getKey() {
+		return key;
+	}
+
+	public V getValue() {
+		return value;
+	}
+
+	public void setValue(V value) {
+		this.value = value;
+	}
+
+	public String toString() {
+		Entry < K, V > cur = this;
+		String result = "";
+		while (cur != null) {
+			result += "<" + cur.getKey() + "," + cur.getValue() + "> ";
+			cur = cur.next;
+		}
+
+		return result;
+	}
+
+}
