@@ -3,10 +3,9 @@
 // eg. input: { 10, 11, 12, 20, 97, 102, 103, 299 } output: [1->9, 13->19, 21->96, 98->101, 104->298, 300->50000]
 
 public class Solution {
-	public List < String > findMissingRanges(int[] numbers, int min, int max)
-	throws Exception {
+	public List < String > findMissingRanges(int[] numbers, int min, int max) {
 		if (numbers == null) {
-			throw new Exception();
+			// 			throw new Exception();
 		}
 
 		int len = numbers.length;
@@ -15,12 +14,22 @@ public class Solution {
 
 		int pre = min - 1;
 
-		// this will be from 1 to 99
+		// this will be from min to max,  m
 		for (int i = 0; i < len; i++) {
 			if (pre != numbers[i] - 1) {
 				if (numbers[i] - pre == 2) {
+
+					if (pre + 1 > max) {
+						return list;
+					}
+
 					list.add(String.valueOf(pre + 1));
 				} else {
+					if (numbers[i] - 1 > max) {
+						list.add((pre + 1) + "->" + max);
+						return list;
+					}
+
 					list.add((pre + 1) + "->" + (numbers[i] - 1));
 				}
 			}
@@ -36,23 +45,5 @@ public class Solution {
 		}
 
 		return list;
-	}
-
-	public static void main(String[] args) {
-		Solution solution = new Solution();
-
-		int[] numbers = {
-			10, 11, 12, 20, 97, 102, 103, 299
-		};
-
-		try {
-			List < String > res = solution.findMissingRanges(numbers, 1, 500);
-
-			System.out.println(res);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 }
