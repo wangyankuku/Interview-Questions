@@ -1,0 +1,69 @@
+public class QuickSort {
+
+    public void quickSort(int[] array) {
+
+	if (array == null)
+	    return;
+
+	sort(array, 0, array.length - 1);
+    }
+
+    public void sort(int[] array, int start, int end) {
+
+	if (start >= end)
+	    return;
+
+	int i = start;
+	int j = end;
+
+	int m = i + (j - i) / 2;
+	int pivot = array[m];
+
+	while (i <= j) {
+
+	    while (i <= end && array[i] < pivot) {
+		i++;
+	    }
+
+	    while (j >= start && array[j] > pivot) {
+		j--;
+	    }
+
+	    if (i <= j) {
+		swap(array, i, j);
+		i++;
+		j--;
+	    }
+	}
+
+	System.out.println(Arrays.toString(array) + " and the pivot is "
+		+ pivot);
+
+	sort(array, start, j);
+	sort(array, i, end);
+
+	return;
+    }
+
+    private void swap(int[] array, int i, int j) {
+	int temp = array[i];
+	array[i] = array[j];
+	array[j] = temp;
+    }
+
+    public static void main(String[] args) {
+	int[] array = new int[100];
+
+	Random random = new Random();
+
+	for (int i = 0; i < array.length; i++) {
+	    array[i] = random.nextInt(2000);
+	}
+
+	System.out.println("The original array is " + Arrays.toString(array));
+
+	QuickSort qs = new QuickSort();
+	qs.quickSort(array);
+
+    }
+}
