@@ -1,0 +1,76 @@
+//There are n ticket windows in the railway station. The with window has a(j) tickets available. The price of a ticket is equal to the number of tickets remaining in that window at that time. What is the maximum amount of money the railway station can earn from selling the first m tickets?
+
+//For example if we got 3 ticket windows have tickets of 3, 3, 4 and we want to sell 4 tickets. then
+
+//n = 3, m = 5
+//A[3] = {3, 3, 4}
+//The maximum money earned is 4 + 3 + 3 + 3 + 2 = 15
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class TrainTicket {
+
+    public long getMaxProfit(int n, long m, Integer[] tickets) {
+        Arrays.sort(tickets, Collections.reverseOrder());
+    
+        long profit = 0L;
+        int maxPrice = -1;
+        int i = 0;    
+        int totalTickets = 0;
+	
+        for (int j = 0;j < tickets.length;j++) {
+            totalTickets += tickets[j];
+        }
+
+        if (m > totalTickets) {
+            return getMaxProfit(tickets);
+        }
+        
+        while (m > 0) {
+            if (i == n || tickets[i] != maxPrice) {
+                i = 0;
+                maxPrice = tickets[i];
+                
+                if (maxPrice == 0) {
+                    break;
+                }
+                
+                continue;
+            }
+            
+            profit += maxPrice;
+            m--;
+            tickets[i]--;
+            i++;
+        }
+        
+        return profit;
+    }
+    
+    private long getMaxProfit(Integer[] tickets) {
+        
+        long maxProfit = 0;
+        
+        for (int i = 0;i < tickets.length;i++) {
+            int curProfit = (1 + tickets[i]) * tickets[i] / 2;
+            maxProfit += curProfit;
+        }
+        
+        return maxProfit;
+    }
+
+    public static void main(String[] args) {
+
+	Integer[] arr = new Integer[2];
+	arr[0] = 2;
+	arr[1] = 5;
+//	Arrays.fill(arr, 9999);
+
+	long profit = new TrainTicket().getMaxProfit(arr.length, 8L, arr);
+
+	System.out.println(profit);
+
+    }
+}
