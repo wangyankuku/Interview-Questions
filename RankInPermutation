@@ -1,0 +1,84 @@
+import java.math.BigInteger;
+import java.util.*;
+
+public class Permutation {
+    public String getRankInPermutation(String str) {
+
+	char[] arr = str.toCharArray();
+	int len = arr.length;
+	BigInteger rank = BigInteger.valueOf(0);
+
+	for (int i = 0; i < len; i++) {
+	    int smaller = getSmaller(arr, i + 1, len - 1, arr[i]);
+	    int numOfLowDigits = len - i - 1;
+	    BigInteger divisor = getDivisor(arr, i, len - 1);
+	    BigInteger fact = factorial(numOfLowDigits);
+	    BigInteger divident = BigInteger.valueOf(smaller).multiply(fact);
+	    BigInteger quotient = divident.divide(divisor);
+	    rank = rank.add(quotient);
+	}
+
+	return rank.toString();
+    }
+
+    public BigInteger factorial(int n) {
+	BigInteger res = BigInteger.valueOf(1);
+	BigInteger num = BigInteger.valueOf(n);
+
+	if (num.equals(BigInteger.valueOf(0)))
+	    return res;
+
+	while (num.intValue() > 0) {
+	    res = res.multiply(num);
+	    num = num.subtract(BigInteger.valueOf(1));
+	}
+
+	return res;
+    }
+
+    public int getSmaller(char[] arr, int start, int end, char cur) {
+	int smaller = 0;
+
+	for (int i = start; i <= end; i++) {
+	    if (arr[i] < cur) {
+		smaller++;
+	    }
+	}
+
+	return smaller;
+    }
+
+    public BigInteger getDivisor(char[] arr, int start, int end) {
+
+	BigInteger divisor = BigInteger.valueOf(1);
+
+	Map<Character, Integer> map = new HashMap<Character, Integer>();
+
+	for (int i = start; i <= end; i++) {
+	    char cur = arr[i];
+
+	    if (map.containsKey(cur)) {
+		map.put(cur, map.get(cur) + 1);
+	    } else {
+		map.put(cur, 1);
+	    }
+	}
+
+	for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+	    divisor = divisor.multiply(factorial(entry.getValue()));
+	}
+
+	return divisor;
+    }
+
+    public static void main(String[] args) {
+
+	Permutation pm = new Permutation();
+	String str = "acdb";
+
+	String out = pm.getRankInPermutation(str);
+
+	System.out.println(out);
+
+    }
+}
