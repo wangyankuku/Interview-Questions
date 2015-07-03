@@ -1,21 +1,36 @@
-public static Node LCA(Node root, Node a, Node b) {
-   if (root == null) {
-       return null;
-   }
+public class Solution {
+    public static TreeNode getLowestAncestor(TreeNode root, TreeNode n1,
+	    TreeNode n2) {
 
-   // If the root is one of a or b, then it is the LCA
-   if (root == a || root == b) {
-       return root;
-   }
+	if (n1 == n2)
+	    return n1;
 
-   Node left = LCA(root.left, a, b);
-   Node right = LCA(root.right, a, b);
+	if (root == null)
+	    return null;
 
-   // If both nodes lie in left or right then their LCA is in left or right,
-   // Otherwise root is their LCA
-   if (left != null && right != null) {
-      return root;
-   }
+	if (root == n1 || root == n2)
+	    return root;
 
-   return (left != null) ? left : right; 
+	TreeNode res1 = getLowestAncestor(root.left, n1, n2);
+	TreeNode res2 = getLowestAncestor(root.right, n1, n2);
+
+	if (res1 != null && res2 != null)
+	    return root;
+
+	return res1 != null ? res1 : res2;
+    }
+
+    public static void main(String[] args) {
+	TreeNode root = new TreeNode(2);
+	root.left = new TreeNode(1);
+	root.right = new TreeNode(3);
+	root.left.left = new TreeNode(0);
+	root.left.right = new TreeNode(10);
+
+	TreeNode res = Solution.getLowestAncestor(root, root.left.left,
+		root.right);
+
+	System.out.println(res.val);
+    }
+
 }
