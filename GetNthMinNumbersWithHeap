@@ -1,0 +1,51 @@
+public class Solution {
+
+    // To find first n min element in nums
+    public static int[] FixedSizeMinPriorityQueue(int[] nums, int n) {
+
+	int len = nums.length;
+
+	if (len < n)
+	    throw new RuntimeException("The length of the array is less than n");
+
+	PriorityQueue<Integer> pq = new PriorityQueue<Integer>(n,
+		Collections.reverseOrder());
+
+	for (int i = 0; i < len; i++) {
+	    if (pq.size() == n) {
+		if (nums[i] < pq.peek()) {
+		    pq.poll();
+		    pq.offer(nums[i]);
+		}
+	    } else {
+		pq.offer(nums[i]);
+	    }
+	}
+
+	int[] res = new int[n];
+
+	for (int i = n - 1; i >= 0; i--) {
+	    res[i] = pq.poll();
+	}
+
+	return res;
+    }
+
+    public static void main(String[] args) {
+	Random random = new Random();
+	int size = 1000;
+	int[] nums = new int[size];
+	for (int i = 0; i < size; i++) {
+	    nums[i] = random.nextInt(10000);
+	}
+
+	Arrays.sort(nums);
+	System.out.println(Arrays.toString(nums));
+
+	int n = 1;
+
+	System.out.println(Arrays.toString(Solution.FixedSizeMinPriorityQueue(
+		nums, n)));
+    }
+
+}
