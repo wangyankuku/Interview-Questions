@@ -1,0 +1,95 @@
+public class Serialize_Deserialize {
+
+    public String serialize(TreeNode root) {
+
+	if (root == null) {
+	    return "#";
+	}
+
+	StringBuffer sb = new StringBuffer();
+
+	Queue<TreeNode> queue = new LinkedList<TreeNode>();
+
+	int n = 1;
+	queue.offer(root);
+	sb.append(root.val + ",");
+
+	while (!queue.isEmpty()) {
+
+	    int numOfChildren = 0;
+
+	    for (int i = 0; i < n; i++) {
+		TreeNode cur = queue.poll();
+
+		if (cur.left != null) {
+		    queue.offer(cur.left);
+		    numOfChildren++;
+		    sb.append(cur.left.val + ",");
+		} else {
+		    sb.append("#,");
+		}
+
+		if (cur.right != null) {
+		    queue.offer(cur.right);
+		    numOfChildren++;
+		    sb.append(cur.right.val + ",");
+		} else {
+		    sb.append("#,");
+		}
+	    }
+
+	    n = numOfChildren;
+	}
+
+	return sb.toString().substring(0, sb.length() - 1);
+    }
+
+    public TreeNode deserialize(String str) {
+	if (str == null)
+	    return null;
+
+	int len = str.length();
+	if (len == 0)
+	    return null;
+	if (str.charAt(0) == '#')
+	    return null;
+	String[] arr = str.split("\\,");
+
+	Queue<TreeNode> queue = new LinkedList<TreeNode>();
+	TreeNode root = new TreeNode(Integer.parseInt(arr[0]));
+	queue.offer(root);
+
+	int idx = 0;
+
+	while (!queue.isEmpty()) {
+	    TreeNode cur = queue.poll();
+
+	    String left = ++idx < arr.length ? arr[idx] : "#";
+	    String right = ++idx < arr.length ? arr[idx] : "#";
+
+	    if (!left.equals("#")) {
+		cur.left = new TreeNode(Integer.parseInt(left));
+		queue.offer(cur.left);
+	    } else {
+		cur.left = null;
+	    }
+
+	    if (!right.equals("#")) {
+		cur.right = new TreeNode(Integer.parseInt(right));
+		queue.offer(cur.right);
+	    } else {
+		cur.right = null;
+	    }
+	}
+
+	return root;
+    }
+
+    public static void main(String[] args) {
+	String str = "1,2,3,#,#,4,#,#,5";
+	Serialize_Deserialize sd = new Serialize_Deserialize();
+	String str2 = sd.serialize(sd.deserialize(str));
+	System.out.println(str2);
+
+    }
+}
