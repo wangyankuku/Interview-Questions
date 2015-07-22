@@ -1,0 +1,48 @@
+//Given an array of positive integers and a target integer, find if there is a consecutive subarray that sums to the target. E.g, given {5,6,4,12}, findsum(10)=true, findsum(11)=false. 
+
+
+public class Solution {
+    public boolean checkSum(int[] array, int target) throws Exception {
+	if (array == null)
+	    throw new IllegalArgumentException("");
+
+	int len = array.length;
+	if (len == 0)
+	    return false;
+	int i = 0;
+	int j = 0;
+	int curSum = 0;
+
+	while (j < len) {
+	    curSum += array[j];
+	    j++;
+	    if (curSum == target) {
+		return true;
+	    } else if (curSum > target) {
+		while (curSum > target) {
+		    curSum -= array[i];
+		    i++;
+		}
+
+		if (curSum == target) {
+		    return true;
+		}
+	    } else {
+		// pass
+	    }
+	}
+
+	return false;
+    }
+
+    public static void main(String[] args) {
+	int[] array = { 15, 2, 4, 8, 9, 5, 10, 23 };
+
+	try {
+	    System.out.println(Test5.checkSum(array, 23));
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+    }
+}
