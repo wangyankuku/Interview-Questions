@@ -1,0 +1,104 @@
+public class LCS {
+
+    StringBuffer sb = new StringBuffer();
+
+    public int longestCommonSequence(String s1, String s2) {
+	if (s1 == null || s2 == null)
+	    return 0;
+
+	int len1 = s1.length();
+	int len2 = s2.length();
+
+	int[][] table = new int[len1 + 1][len2 + 1];
+
+	for (int i = 1; i <= len1; i++) {
+
+	    char ci = s1.charAt(i - 1);
+
+	    for (int j = 1; j <= len2; j++) {
+		char cj = s2.charAt(j - 1);
+
+		if (ci == cj) {
+		    table[i][j] = table[i - 1][j - 1] + 1;
+		} else {
+		    table[i][j] = Math.max(table[i - 1][j], table[i][j - 1]);
+		}
+
+	    }
+	}
+
+	System.out.println(searchLCS(table, s1, s2));
+	System.out.println(searchOneLCS(table, s1, s2));
+
+	return table[len1][len2];
+    }
+
+    public String searchOneLCS(int[][] table, String s1, String s2) {
+	int i = s1.length();
+	int j = s2.length();
+	StringBuffer sb = new StringBuffer();
+
+	while (i > 0 && j > 0) {
+	    char ci = s1.charAt(i - 1);
+	    char cj = s2.charAt(j - 1);
+
+	    if (ci == cj) {
+		sb.append(ci);
+		i--;
+		j--;
+	    } else {
+		if (table[i - 1][j] >= table[i][j - 1]) {
+		    i--;
+		} else {
+		    j--;
+		}
+	    }
+	}
+
+	return sb.reverse().toString();
+
+    }
+
+    public Set<String> searchLCS(int[][] table, String s1, String s2) {
+
+	Set<String> res = new HashSet<String>();
+
+	searchHelper(table, s1.length(), s2.length(), s1, s2, "", res);
+
+	return res;
+    }
+
+    private void searchHelper(int[][] table, int i, int j, String s1,
+	    String s2, String temp, Set<String> res) {
+	if (i == 0 || j == 0) {
+	    res.add(temp);
+	    return;
+	}
+
+	char ci = s1.charAt(i - 1);
+	char cj = s2.charAt(j - 1);
+
+	if (ci == cj) {
+	    searchHelper(table, i - 1, j - 1, s1, s2, ci + temp, res);
+	} else {
+	    if (table[i][j - 1] == table[i - 1][j]) {
+		searchHelper(table, i, j - 1, s1, s2, temp, res);
+		searchHelper(table, i - 1, j, s1, s2, temp, res);
+	    } else if (table[i][j - 1] > table[i - 1][j]) {
+		searchHelper(table, i, j - 1, s1, s2, temp, res);
+	    } else {
+		searchHelper(table, i - 1, j, s1, s2, temp, res);
+	    }
+	}
+
+	return;
+
+    }
+
+    public static void main(String[] args) {
+	String s1 = "JFIEOHGLJKOWUEHGAMZNXBVPQLOAIEYUAHSDJWKELNJGKLNADFKHQOPEIIOWEURJNZNFEAPQOWLZMBCZYYUWEWLMKLCN";
+	String s2 = "OEPRYSNWKFHSKWNSLRYQPWIEADJF";
+
+	System.out.println(new LCS().longestCommonSequence(s1, s2));
+    }
+}
