@@ -1,0 +1,57 @@
+class Solution {
+  
+  public Node insertCircularLinkedList(Node root, int val) {
+    if (root == null) {
+      return new Node(val);
+    } 
+    
+    Node cur = root;
+    Node pre = null;
+    
+    while (cur.next != root) {
+      pre = cur;
+      cur = cur.next;
+    }
+    
+    Node last = cur;
+    pre = last;
+    cur = root;
+    
+    while (true) {
+      if (val <= cur.val) {
+        Node temp = new Node(val);
+        pre.next = temp;
+        temp.next = cur;
+        
+        if (cur == root) {
+          root = temp;
+        }
+        
+        break;
+      }
+      else {
+        if (cur = last) {
+          cur.next = new Node(val);
+          cur = cur.next;
+          cur.next = root;
+          break;
+        }
+        else {
+          cur = cur.next;
+        }
+      }
+    }
+    
+    return root;
+    
+  }
+}
+
+class Node {
+  int val;
+  Node next;
+  
+  public Node(int val) {
+    this.val = val;
+  }
+}
