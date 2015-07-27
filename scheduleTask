@@ -1,0 +1,103 @@
+// The same job cannot be done within cooltime
+
+public class Solution {
+
+public int scheduleTask(List<String> tasks, int cooltime) {
+	if (tasks == null || tasks.size() == 0 || cooltime <= 0) {
+	    return 0;
+	}
+
+	int totalTime = 0;
+	int len = tasks.size();
+	StringBuffer sb = new StringBuffer();
+
+	Queue<String> pre = new LinkedList<String>();
+	Queue<String> cur = null;
+	Queue<String> helper = new LinkedList<String>();
+
+	String curTask = null;
+
+	for (int i = 0; i < len; i++) {
+	    curTask = tasks.get(i);
+	    cur = new LinkedList<String>();
+	    cur.offer(curTask);
+	    sb.append(curTask);
+	    totalTime++;
+	    int k = 0;
+
+	    while (!pre.isEmpty()) {
+
+		if (curTask.equals(pre.peek())) {
+
+		    int idletime = cooltime - k;
+		    totalTime += idletime;
+
+		    for (int m = 0; m < idletime; m++) {
+			sb.insert(sb.length() - 1, "-");
+		    }
+
+		    helper.offer(cur.poll());
+
+		    for (int m = 0; m < idletime && helper.size() < cooltime; m++) {
+			helper.offer(null);
+		    }
+
+		    while (helper.size() < cooltime) {
+			helper.offer(cur.poll());
+		    }
+
+		    cur = helper;
+		    helper = new LinkedList<String>();
+
+		    break;
+
+		} else {
+
+		    if (cur.size() < cooltime) {
+			cur.offer(pre.poll());
+			k++;
+		    } else {
+			pre.poll();
+		    }
+		}
+	    }
+	    System.out.println(cur);
+
+	    pre = cur;
+	}
+
+	System.out.println(sb.toString());
+
+	return totalTime;
+    }
+    
+    public static void main(String[] args) {
+
+	Test ttt = new Test();
+
+	@SuppressWarnings("serial")
+	List<String> list = new ArrayList<String>() {
+	    {
+		add("A");
+		add("B");
+		add("C");
+		add("D");
+		add("E");
+		add("F");
+		add("G");
+		add("H");
+		add("A");
+		add("B");
+		add("B");
+		add("A");
+		add("B");
+	    }
+	};
+
+	int time = ttt.scheduleTask(list, 10);
+
+	System.out.println(time);
+
+    }
+
+}
