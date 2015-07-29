@@ -1,0 +1,116 @@
+// Find k closest elements to a given value
+// Given a sorted array arr[] and a value X, find the k closest elements to X in arr[]. 
+// Examples:
+
+// Input: K = 4, X = 35
+//       arr[] = {12, 16, 22, 30, 35, 39, 42, 
+//               45, 48, 50, 53, 55, 56}
+// Output: 30 39 42 45
+
+
+
+class Solution {
+  
+  public int[] getKCloseNumbers(int[] array, int k, int x) {
+    
+      int[] res = {-1,-1};
+    
+      if (array == null || array.length == 0 || k <= 0 || k > array.length) {
+          return res;
+      }
+    
+      int len = array.length;
+      
+      
+      int closestIdx = binarySearch(array, x);
+      
+      int start = closestIdx;
+      int end = closestIdx;
+      
+      int i = closestIdx - 1;
+      int j = closestIdx + 1;
+      k--;
+
+      
+      while (i >= 0 && j < len) {
+          if (k == 0) {
+              break;
+          }
+          
+          if (dist(array[i], x) <= dist(array[j], x)) {
+              start = i;
+              i--;
+          }
+          else {
+              end = j;
+              j++;
+          }
+          k--;
+      }
+      
+      if (i >= 0) {
+          start -= k;
+      }
+      
+      if (j < len) {
+          end += k;
+      }
+      
+
+      res[0] = start;
+      res[1] = end;
+      return res;     
+      
+  }
+    
+    
+    private int binarySearch(int[] array, int x) {
+        int i = 0;
+        int j = array.length - 1;
+        
+        while (i <= j) {
+            int m = i + (j - i) / 2;
+            
+            if (array[m] == x) {
+                return m;
+            }
+            else if (array[m] < x) {
+                i = m + 1;
+            }
+            else {
+                j = m - 1;
+            }
+        }
+        
+        if (j < 0) return i;
+        if (i == array.length) return j;
+        
+        if (dist(array[i], x) <= dist(array[j], x)) return i;
+        
+        return j;
+        
+    }
+
+    private int dist(int x, int y) {
+        return Math.abs(x - y);
+    }
+  
+  
+  public static void main(String[] args) {
+        Solution sl = new Solution();
+      Random random = new Random();
+      
+      int[] array = new int[10];
+      
+      for (int i = 0;i < 10;i++) {
+          array[i] = random.nextInt(1000);
+      }
+      Arrays.sort(array);
+      int temp = random.nextInt(1000);
+      int[] res = sl.getKCloseNumbers(array, 4, temp);
+      
+      System.out.println(Arrays.toString(array));
+      System.out.println(temp);
+      System.out.println(Arrays.toString(res));
+  }
+}
